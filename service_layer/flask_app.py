@@ -26,12 +26,17 @@ app = Flask(__name__)
 @app.route("/allocate", methods=["POST"])
 def allocate_endpoint():
     session = get_session()
-    batches = repository.SqlAlchemyRepository(session=session).list()
+    # batches = repository.SqlAlchemyRepository(session=session).list()
+    repo = repository.
     line = model.OrderLine(
         orderid=request.json["orderid"],
         sku=request.json["sku"],
         qty=request.json["qty"],
     )
-    batchref = model.allocate(line=line, batches=batches)
+    # batchref = model.allocate(line=line, batches=batches)
+    try:
+        batchref = services.allocate(line, repo, session)
+    except (model.OutOfStockException, services.InvalidSku) as e:
+        return {"messsage": str(e)}, 400
 
     return {"batchref": batchref}, 201
