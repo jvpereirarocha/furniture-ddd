@@ -7,6 +7,10 @@ class OutOfStockException(Exception):
     pass
 
 
+class InvalidSku(Exception):
+    pass
+
+
 class Product:
     def __init__(self, sku: str, batches: List[Batch]):
         self.sku = sku
